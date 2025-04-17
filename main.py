@@ -1,9 +1,13 @@
 from fastapi import FastAPI
+from sync import sync_estoque
 
 app = FastAPI()
 
 @app.get("/estoque")
-def get_estoque():
-    # Aqui você pode pegar os dados do estoque de onde quiser, por exemplo, Google Sheets ou banco de dados
-    return {"estoque": "dados de estoque aqui"}
-
+def atualizar_estoque():
+    estoque = sync_estoque()  # agora a função deve retornar os dados de estoque
+    return {
+        "status": "ok",
+        "mensagem": "Estoque atualizado no WooCommerce",
+        "estoque": estoque
+    }
