@@ -1,19 +1,21 @@
+# sync.py
 from bling_api import BlingAPI
 from woocommerce_api import WooCommerceAPI
 import os
-import requests  # <-- Adicione isso aqui
 from dotenv import load_dotenv
 
 load_dotenv()
 
+def sync_estoque():
+    bling = BlingAPI()
 
-bling = BlingAPI()
-test = requests.get("https://www.bling.com.br/Api/v3/usuarios/me", headers=bling.get_headers())
-print("🔐 Teste de autenticação Bling:", test.status_code)
-print("Resposta:", test.json())
+    # Teste de autenticação (opcional para debug)
+    # test = requests.get("https://www.bling.com.br/Api/v3/usuarios/me", headers=bling.get_headers())
+    # print("🔐 Teste de autenticação Bling:", test.status_code)
+    # print("Resposta:", test.json())
 
-bling.refresh_access_token()
-woo = WooCommerceAPI()
+    bling.refresh_access_token()
+    woo = WooCommerceAPI()
 
 # Lista de SKUs para sincronizar
 sku_list = [
@@ -76,10 +78,10 @@ sku_list = [
 ]
 
 deposit_sp = os.getenv("BLING_DEPOSIT_SP")
-deposit_foz = os.getenv("BLING_DEPOSIT_FOZ")
+    deposit_foz = os.getenv("BLING_DEPOSIT_FOZ")
 
-for sku in sku_list:
-    estoques = bling.get_stock_by_deposit(sku)
-    sp_stock = estoques.get("SP", 0)
-    foz_stock = estoques.get("FOZ", 0)
-    woo.update_custom_fields(sku, sp_stock, foz_stock)
+    for sku in sku_list:
+        estoques = bling.get_stock_by_deposit(sku)
+        sp_stock = estoques.get("SP", 0)
+        foz_stock = estoques.get("FOZ", 0)
+        woo.update_custom_fields(sku, sp_stock, foz_stock)
