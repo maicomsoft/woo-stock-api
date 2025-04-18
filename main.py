@@ -5,5 +5,5 @@ app = FastAPI()
 
 @app.get("/estoque")
 def atualizar_estoque():
-    sync_estoque()
-    return {"status": "ok", "mensagem": "Estoque atualizado no WooCommerce"}
+    resultado = sync_estoque()
+    return {"status": "ok", "dados": resultado}
